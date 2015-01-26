@@ -88,10 +88,6 @@
 // 	cudaFree(d_C.elements);
 // }
 
-cudaPitchedPtr my_make_cudaPitchedPtr(int m, int n)
-{
-	return make_cudaPitchedPtr(malloc(m * n * sizeof(float)), n * sizeof(float), m, n);
-}
 
 void make_random(cudaPitchedPtr A)
 {
@@ -122,11 +118,10 @@ int main(int argc, char ** argv)
 	sscanf(argv[3], "%d", &k);
 
 	cudaPitchedPtr A, B;
-	
-	A = my_make_cudaPitchedPtr(m, n);
+	A = make_cudaPitchedPtr(malloc(m * n * sizeof(float)), n * sizeof(float), n, m);
 	printf("A at %d pitch = %d xsize = %d ysize = %d\n", A.ptr, A.pitch, A.xsize, A.ysize);
 	
-	B = my_make_cudaPitchedPtr(m, n);
+	B = make_cudaPitchedPtr(malloc(m * n * sizeof(float)), n * sizeof(float), n, m);
 	printf("B at %d pitch = %d xsize = %d ysize = %d\n", B.ptr, B.pitch, B.xsize, B.ysize);
 	
 	make_random(A);
@@ -138,7 +133,7 @@ int main(int argc, char ** argv)
 	printf("dA at %d pitch = %d xsize = %d ysize = %d\n", dA.ptr, dA.pitch, dA.xsize, dA.ysize);
 	printf("[Deivce]: cudaMallocPitch - %s\n", cudaGetErrorString(err));
 
-	err = cudaMemcpy2D(dA.ptr, dA.pitch, A.ptr, A.pitch, A.pitch, A.ysize, cudaMemcpyHostToDevice);
+	err = cudaMemcpy2D(dA.ptr, dA.pitch, A.ptr, A.pitch, A.xsize * sizeof(float), A.ysize, cudaMemcpyHostToDevice);
 	printf("[Deivce]: cudaMemcpy2D - %s\n", cudaGetErrorString(err));
 
 	printf("%d <> %d * %d = %d\n", dA.pitch, dA.xsize, sizeof(float), dA.xsize * sizeof(float));
