@@ -181,8 +181,8 @@ void MatMul(cudaPitchedPtr A, cudaPitchedPtr B, cudaPitchedPtr C, int m, int n, 
 
 	/* Launch the kernel      */
 	cudaEventRecord(start, 0);
-		MatMulKernelShared <<< dimGrid, dimBlock >>> ((float *) dA.ptr,(float *) dB.ptr,(float *) dC.ptr, m, n, k);
-		//MatMulKernel <<< dimGrid, dimBlock >>> (dA, dB, dC);
+		//MatMulKernelShared <<< dimGrid, dimBlock >>> ((float *) dA.ptr,(float *) dB.ptr,(float *) dC.ptr, m, n, k);
+		MatMulKernel <<< dimGrid, dimBlock >>> (dA, dB, dC);
 		//kernel_shared <<< dimGrid, dimBlock >>> (dA, dB, dC, m, n, k, BLOCK_SIZE);
 
 	err = cudaThreadSynchronize(); cudaEventRecord(stop, 0); cudaEventSynchronize(stop); cudaEventElapsedTime(&timer, start, stop);
