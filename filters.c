@@ -79,7 +79,7 @@ void kernel2(unsigned char* input_image, unsigned char* output_image, int width,
 }
 
 
-const int MAX_STREAM_COUNT = 3;
+const int MAX_STREAM_COUNT = 1;
 
 typedef struct
 {
